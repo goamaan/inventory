@@ -1,0 +1,5 @@
+mutation CreateItem($data: CreateItemInput!) {
+  createItem(data: $data) {
+    ...ItemShipment
+  }
+}

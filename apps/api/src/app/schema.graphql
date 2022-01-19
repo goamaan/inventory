@@ -45,7 +45,7 @@ type Query {
 type Shipment {
   createdAt: DateTime!
   id: String!
-  items: Item
+  items: [Item!]
   title: String!
   updatedAt: DateTime!
 }

@@ -1,0 +1,14 @@
+fragment ShipmentItem on Shipment {
+  id
+  title
+  createdAt
+  updatedAt
+  items {
+    id
+    title
+    description
+    cost
+    createdAt
+    updatedAt
+  }
+}

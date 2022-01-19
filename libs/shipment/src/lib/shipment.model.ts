@@ -6,5 +6,5 @@ import { ObjectType } from '@nestjs/graphql';
 export class Shipment extends BaseModel {
   id: string;
   title: string;
-  items?: Item;
+  items?: Item[];
 }

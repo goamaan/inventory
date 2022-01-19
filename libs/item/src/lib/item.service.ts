@@ -15,7 +15,9 @@ export class ItemService {
   }
 
   async findAll() {
-    return this.prisma.item.findMany();
+    return this.prisma.item.findMany({
+      include: { shipment: true },
+    });
   }
 
   async createItem(item: CreateItemInput) {

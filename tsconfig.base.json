@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@inventory/core": ["libs/core/src/index.ts"],
+      "@inventory/data-access": ["libs/data-access/src/index.ts"],
       "@inventory/item": ["libs/item/src/index.ts"],
       "@inventory/shared": ["libs/shared/src/index.ts"],
       "@inventory/shipment": ["libs/shipment/src/index.ts"]

@@ -3,8 +3,11 @@
   "projects": {
     "api": "apps/api",
     "core": "libs/core",
+    "data-access": "libs/data-access",
     "item": "libs/item",
     "shared": "libs/shared",
-    "shipment": "libs/shipment"
+    "shipment": "libs/shipment",
+    "webapp": "apps/webapp",
+    "webapp-e2e": "apps/webapp-e2e"
   }
 }
