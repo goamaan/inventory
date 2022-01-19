@@ -1,0 +1,61 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateItemInput {
+  cost: Int!
+  description: String!
+  title: String!
+}
+
+input CreateShipmentInput {
+  title: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Item {
+  cost: Float!
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  shipment: Shipment
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  createItem(data: CreateItemInput!): Item!
+  createShipment(data: CreateShipmentInput!): Shipment!
+  updateItem(data: UpdateItemInput!, id: String!): Item!
+  updateShipment(data: UpdateShipmentInput!, id: String!): Shipment!
+}
+
+type Query {
+  item(id: String!): Item!
+  items: [Item!]!
+  shipment(id: String!): Shipment!
+  shipments: [Shipment!]!
+  uptime: Float!
+}
+
+type Shipment {
+  createdAt: DateTime!
+  id: String!
+  items: Item
+  title: String!
+  updatedAt: DateTime!
+}
+
+input UpdateItemInput {
+  cost: Int!
+  description: String!
+  title: String!
+}
+
+input UpdateShipmentInput {
+  title: String!
+}
