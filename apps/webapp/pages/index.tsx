@@ -563,7 +563,7 @@ const Index: React.FC = () => {
                 />
                 <Text fontSize={'2xl'}>{item.title}</Text>
                 <Text>{item.description}</Text>
-                <Text>{`$${item.cost}`}</Text>
+                <Text>{`Cost: $${item.cost}`}</Text>
                 <Button
                   size={'sm'}
                   colorScheme={'blue'}

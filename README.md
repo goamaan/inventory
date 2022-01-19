@@ -1,94 +1,54 @@
+# Inventory tracking app
 
+- CRUD for Inventory Items
+- CRUD for Shipments
+- Add/remove items to/from shipments
 
-# Inventory
+---
 
-This project was generated using [Nx](https://nx.dev).
+## Tech Stack
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+- Monorepo build system using [Nx](https://nx.dev)
 
-🔎 **Smart, Fast and Extensible Build System**
+> I chose a monorepo architecture because it allows for great modularity, code sharing, and easy extensibility, since all core functionality is split betwen libraries
 
-## Adding capabilities to your workspace
+---
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+- Typescript for the entire stack
+- GraphQL API in Node.js using NestJS
+- PostgreSQL database accessed with [Prisma](https://www.prisma.io/), an ORM for first-class Typescript support
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+> Using GraphQL and NestJS together allows for easy extensibility because of a decorator-heavy syntax, so data can be easily annotated to create GQL schemas, Authentication/Authorization can be made available using concepts like guards, and server side data validation is accomplished by simply using annotated DTOs and Validation Pipelines
 
-Below are our core plugins:
+---
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+- React App with Next.js
+- ChakraUI for pre built react components
+- GraphQL code generator for react hooks
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+> I chose GraphQL since I have full control over both the API and the frontend, and therefore GraphQL will allow for better DX as the modern toolchain guarantees end-to-end type safety and a faster development experience
 
-## Generate an application
+## Run locally
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+### Requirements for local setup:
 
-> You can use any of the plugins above to generate applications as well.
+- [Node.js](https://nodejs.org/en/) (LTS will work fine)
+- [PostgreSQL](https://www.postgresql.org/download/)
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+1. Install dependencies `npm install`
+2. Create a `.env` file with the `DATABASE_URL`, `PORT`, and `NODE_ENV`. Here's a sample one:
 
-## Generate a library
+```shell
+NODE_ENV=development
+PORT=5000
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/inventory"
+```
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+3. Run API server `npm run start`
+4. Run React dev server `npm run start webapp`
 
-> You can also use any of the plugins above to generate libraries as well.
+## Misc
 
-Libraries are shareable across libraries and applications. They can be imported from `@inventory/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+- The main backend app is in `apps/api/src` and all libraries are in `libs/`
+- All the UI code is in `apps/webapp` but this would usually be in a UI library in the `libs/` directory
+- Frontend data access code (GraphQL queries/mutations) is in `libs/data-access`
