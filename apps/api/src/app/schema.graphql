@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 input CreateItemInput {
-  cost: Int!
+  cost: Float!
   description: String!
   title: String!
 }
@@ -28,8 +28,12 @@ type Item {
 }
 
 type Mutation {
+  addItemToShipment(itemId: String!, shipmentId: String!): Shipment!
   createItem(data: CreateItemInput!): Item!
   createShipment(data: CreateShipmentInput!): Shipment!
+  deleteItem(id: String!): Item!
+  deleteShipment(id: String!): Shipment!
+  removeItemFromShipment(itemId: String!, shipmentId: String!): Shipment!
   updateItem(data: UpdateItemInput!, id: String!): Item!
   updateShipment(data: UpdateShipmentInput!, id: String!): Shipment!
 }
@@ -51,7 +55,7 @@ type Shipment {
 }
 
 input UpdateItemInput {
-  cost: Int!
+  cost: Float!
   description: String!
   title: String!
 }

@@ -30,4 +30,25 @@ export class ShipmentResolver {
   ) {
     return this.shipmentService.updateShipment(id, data);
   }
+
+  @Mutation(() => Shipment)
+  async deleteShipment(@Args('id') id: string) {
+    return this.shipmentService.deleteShipment(id);
+  }
+
+  @Mutation(() => Shipment)
+  async addItemToShipment(
+    @Args('itemId') itemId: string,
+    @Args('shipmentId') shipmentId: string
+  ) {
+    return this.shipmentService.addItem(itemId, shipmentId);
+  }
+
+  @Mutation(() => Shipment)
+  async removeItemFromShipment(
+    @Args('itemId') itemId: string,
+    @Args('shipmentId') shipmentId: string
+  ) {
+    return this.shipmentService.removeItem(itemId, shipmentId);
+  }
 }

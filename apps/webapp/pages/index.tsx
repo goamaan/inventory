@@ -22,12 +22,21 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import {
   Item,
   Shipment,
+  useAddItemToShipmentMutation,
+  useCreateItemMutation,
+  useCreateShipmentMutation,
+  useDeleteItemMutation,
+  useDeleteShipmentMutation,
   useItemsQuery,
+  useRemoveItemFromShipmentMutation,
   useShipmentsQuery,
+  useUpdateItemMutation,
+  useUpdateShipmentMutation,
 } from '@inventory/data-access';
 import { NextSeo } from 'next-seo';
 import React, { useEffect, useState } from 'react';
@@ -39,12 +48,278 @@ const Index: React.FC = () => {
   const [modalType, setModalType] = useState<
     'addItem' | 'updateItem' | 'addShipment' | 'updateShipment' | 'shipment'
   >();
+
   const [addItemText, setAddItemText] = useState('');
   const [addItemDesc, setAddItemDesc] = useState('');
   const [addItemCost, setAddItemCost] = useState(0);
+
+  const [updateItemText, setUpdateItemText] = useState('');
+  const [updateItemDesc, setUpdateItemDesc] = useState('');
+  const [updateItemCost, setUpdateItemCost] = useState(0);
+
+  const [addShipmentText, setAddShipmentText] = useState('');
+
+  const [updateShipmentText, setUpdateShipmentText] = useState('');
+
+  const [shipmentChosen, setShipmentChose] = useState('');
+
   const [openItem, setOpenItem] = useState<Item>();
   const [openShipment, setOpenShipment] = useState<Shipment>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [createItem] = useCreateItemMutation();
+  const [updateItem] = useUpdateItemMutation();
+  const [deleteItem] = useDeleteItemMutation();
+  const [createShipment] = useCreateShipmentMutation();
+  const [updateShipment] = useUpdateShipmentMutation();
+  const [deleteShipment] = useDeleteShipmentMutation();
+  const [addToShipment] = useAddItemToShipmentMutation();
+  const [removeFromShipment] = useRemoveItemFromShipmentMutation();
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (!loading) {
+      if (data) {
+        setCategorized(data.items.filter((item) => !item.shipment));
+      }
+    }
+  }, [data, loading]);
+
+  const onCreateItem = async () => {
+    try {
+      await createItem({
+        variables: {
+          data: {
+            cost: addItemCost,
+            description: addItemDesc,
+            title: addItemText,
+          },
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      setOpenItem(null);
+      toast({
+        title: 'Created item',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error creating item',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onUpdateItem = async () => {
+    try {
+      await updateItem({
+        variables: {
+          id: openItem.id,
+          data: {
+            cost: updateItemCost,
+            description: updateItemDesc,
+            title: updateItemText,
+          },
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      setOpenItem(null);
+      toast({
+        title: 'Updated item',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error updating item',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onDeleteItem = async (item: Item) => {
+    try {
+      await deleteItem({
+        variables: {
+          id: item.id,
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      toast({
+        title: 'Deleted item',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error deleting item',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onCreateShipment = async () => {
+    try {
+      await createShipment({
+        variables: {
+          data: {
+            title: addShipmentText,
+          },
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      toast({
+        title: 'Created shipment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error creating shipment',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onUpdateShipment = async () => {
+    try {
+      await updateShipment({
+        variables: {
+          id: openShipment.id,
+          data: {
+            title: updateShipmentText,
+          },
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      setUpdateShipmentText('');
+      toast({
+        title: 'Updated shipment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error updating shipment',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onDeleteShipment = async (shipment: Shipment) => {
+    try {
+      await deleteShipment({
+        variables: {
+          id: shipment.id,
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      toast({
+        title: 'Deleted shipment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error deleting shipment',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onAddToShip = async (itemId: string, shipmentId: string) => {
+    try {
+      await addToShipment({
+        variables: {
+          itemId,
+          shipmentId,
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      toast({
+        title: 'Added item to shipment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Removed from shipment',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const onRemovefromShip = async (itemId: string, shipmentId: string) => {
+    try {
+      await removeFromShipment({
+        variables: {
+          itemId,
+          shipmentId,
+        },
+        refetchQueries: 'active',
+      });
+      onClose();
+      toast({
+        title: 'Deleted shipment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error deleting shipment',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
 
   const addItemModal = (
     <>
@@ -83,7 +358,7 @@ const Index: React.FC = () => {
         </NumberInput>
       </ModalBody>
       <ModalFooter>
-        <Button color="brand.500" width="full" mr={3} type="submit">
+        <Button color="brand.500" width="full" mr={3} onClick={onCreateItem}>
           Create
         </Button>
         <Button onClick={onClose}>Cancel</Button>
@@ -99,24 +374,24 @@ const Index: React.FC = () => {
         <Input
           placeholder="Title..."
           onChange={(e) => {
-            setAddItemText(e.target.value);
+            setUpdateItemText(e.target.value);
           }}
-          value={openItem.title}
+          value={updateItemText}
         />
         <Textarea
           placeholder="Description..."
-          value={openItem.description}
+          value={updateItemDesc}
           onChange={(e) => {
-            setAddItemDesc(e.target.value);
+            setUpdateItemDesc(e.target.value);
           }}
         />
         <NumberInput
           min={0}
           max={99999999}
           onChange={(e) => {
-            setAddItemCost(parseFloat(e));
+            setUpdateItemCost(parseFloat(e));
           }}
-          value={openItem.cost.toString()}
+          value={updateItemCost}
           precision={2}
           step={0.01}
         >
@@ -128,7 +403,7 @@ const Index: React.FC = () => {
         </NumberInput>
       </ModalBody>
       <ModalFooter>
-        <Button color="brand.500" width="full" mr={3} type="submit">
+        <Button color="brand.500" width="full" mr={3} onClick={onUpdateItem}>
           Update
         </Button>
         <Button onClick={onClose}>Cancel</Button>
@@ -144,13 +419,18 @@ const Index: React.FC = () => {
         <Input
           placeholder="Title..."
           onChange={(e) => {
-            setAddItemText(e.target.value);
+            setAddShipmentText(e.target.value);
           }}
-          value={addItemText}
+          value={addShipmentText}
         />
       </ModalBody>
       <ModalFooter>
-        <Button color="brand.500" width="full" mr={3} type="submit">
+        <Button
+          color="brand.500"
+          width="full"
+          mr={3}
+          onClick={onCreateShipment}
+        >
           Create
         </Button>
         <Button onClick={onClose}>Cancel</Button>
@@ -166,13 +446,18 @@ const Index: React.FC = () => {
         <Input
           placeholder="Title..."
           onChange={(e) => {
-            setAddItemText(e.target.value);
+            setUpdateShipmentText(e.target.value);
           }}
-          value={openShipment.title}
+          value={updateShipmentText}
         />
       </ModalBody>
       <ModalFooter>
-        <Button color="brand.500" width="full" mr={3} type="submit">
+        <Button
+          color="brand.500"
+          width="full"
+          mr={3}
+          onClick={onUpdateShipment}
+        >
           Update
         </Button>
         <Button onClick={onClose}>Cancel</Button>
@@ -185,7 +470,11 @@ const Index: React.FC = () => {
       <ModalHeader>Add to Shipment</ModalHeader>
       <ModalCloseButton />
       <ModalBody pb={6}>
-        <Select placeholder="Choose shipment">
+        <Select
+          value={shipmentChosen}
+          placeholder="Choose shipment"
+          onChange={(e) => setShipmentChose(e.target.value)}
+        >
           {shipments.shipments.map((s) => (
             <option key={s.id} value={s.id}>
               {s.title}
@@ -194,21 +483,18 @@ const Index: React.FC = () => {
         </Select>
       </ModalBody>
       <ModalFooter>
-        <Button color="brand.500" width="full" mr={3} type="submit">
+        <Button
+          color="brand.500"
+          width="full"
+          mr={3}
+          onClick={() => onAddToShip(openItem.id, shipmentChosen)}
+        >
           Add
         </Button>
         <Button onClick={onClose}>Cancel</Button>
       </ModalFooter>
     </>
   );
-
-  useEffect(() => {
-    if (!loading) {
-      if (data) {
-        setCategorized(data.items.filter((item) => !item.shipment));
-      }
-    }
-  }, [data, loading]);
 
   if (loading || shipmentLoading) {
     return (
@@ -230,7 +516,7 @@ const Index: React.FC = () => {
         direction={'column'}
         mt="10vh"
       >
-        <Text fontSize={'3xl'}>Uncategorized Items</Text>
+        <Text fontSize={'3xl'}>Uncategorized Items:</Text>
         <Button
           mt={3}
           onClick={() => {
@@ -252,13 +538,27 @@ const Index: React.FC = () => {
                 textAlign={'center'}
               >
                 <IconButton
-                  aria-label="Remove Item"
+                  aria-label="Edit Item"
                   icon={<EditIcon />}
+                  colorScheme={'teal'}
                   size={'md'}
                   onClick={() => {
                     setModalType('updateItem');
+                    setUpdateItemCost(item.cost);
+                    setUpdateItemDesc(item.description);
+                    setUpdateItemText(item.title);
                     setOpenItem(item);
                     onOpen();
+                  }}
+                />
+                <IconButton
+                  aria-label="Delete Item"
+                  ml={5}
+                  icon={<DeleteIcon />}
+                  colorScheme={'red'}
+                  size={'md'}
+                  onClick={async () => {
+                    await onDeleteItem(item);
                   }}
                 />
                 <Text fontSize={'2xl'}>{item.title}</Text>
@@ -270,8 +570,8 @@ const Index: React.FC = () => {
                   p={3}
                   mt={4}
                   onClick={() => {
-                    setModalType('shipment');
                     setOpenItem(item);
+                    setModalType('shipment');
                     onOpen();
                   }}
                 >
@@ -288,7 +588,7 @@ const Index: React.FC = () => {
         direction={'column'}
         mt="10vh"
       >
-        <Text fontSize={'3xl'}>In Shipment</Text>
+        <Text fontSize={'3xl'}>In Shipment:</Text>
         <Button
           mt={3}
           onClick={() => {
@@ -316,6 +616,25 @@ const Index: React.FC = () => {
                 p="3em"
                 textAlign={'center'}
               >
+                <IconButton
+                  aria-label="Edit Shipment"
+                  icon={<EditIcon />}
+                  size={'md'}
+                  onClick={() => {
+                    setModalType('updateShipment');
+                    setUpdateShipmentText(shipment.title);
+                    setOpenShipment(shipment);
+                    onOpen();
+                  }}
+                />
+                <IconButton
+                  aria-label="Remove Shipment"
+                  icon={<DeleteIcon />}
+                  ml={5}
+                  colorScheme={'red'}
+                  size={'sm'}
+                  onClick={() => onDeleteShipment(shipment)}
+                />
                 <Text fontSize={'2xl'}>{shipment.title}</Text>
                 {shipment.items.map((item) => (
                   <Flex key={item.id} m={3} align={'center'} justify={'center'}>
@@ -327,6 +646,7 @@ const Index: React.FC = () => {
                       icon={<DeleteIcon />}
                       colorScheme={'red'}
                       size={'xs'}
+                      onClick={() => onRemovefromShip(item.id, shipment.id)}
                     />
                   </Flex>
                 ))}

@@ -1,0 +1,17 @@
+mutation CreateItem($data: CreateItemInput!) {
+  createItem(data: $data) {
+    ...ItemShipment
+  }
+}
+
+mutation UpdateItem($id: String!, $data: UpdateItemInput!) {
+  updateItem(id: $id, data: $data) {
+    ...ItemShipment
+  }
+}
+
+mutation DeleteItem($id: String!) {
+  deleteItem(id: $id) {
+    ...ItemShipment
+  }
+}

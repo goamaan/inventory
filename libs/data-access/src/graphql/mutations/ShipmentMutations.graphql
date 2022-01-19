@@ -1,0 +1,29 @@
+mutation CreateShipment($data: CreateShipmentInput!) {
+  createShipment(data: $data) {
+    ...ShipmentItem
+  }
+}
+
+mutation UpdateShipment($id: String!, $data: UpdateShipmentInput!) {
+  updateShipment(id: $id, data: $data) {
+    ...ShipmentItem
+  }
+}
+
+mutation DeleteShipment($id: String!) {
+  deleteShipment(id: $id) {
+    ...ShipmentItem
+  }
+}
+
+mutation AddItemToShipment($itemId: String!, $shipmentId: String!) {
+  addItemToShipment(itemId: $itemId, shipmentId: $shipmentId) {
+    ...ShipmentItem
+  }
+}
+
+mutation RemoveItemFromShipment($itemId: String!, $shipmentId: String!) {
+  removeItemFromShipment(itemId: $itemId, shipmentId: $shipmentId) {
+    ...ShipmentItem
+  }
+}

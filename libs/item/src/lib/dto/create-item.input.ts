@@ -1,4 +1,4 @@
-import { InputType } from '@nestjs/graphql';
+import { Field, Float, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @InputType()
@@ -12,5 +12,6 @@ export class CreateItemInput {
   readonly description: string;
 
   @IsNumber()
+  @Field(() => Float)
   readonly cost: number;
 }

@@ -15,7 +15,7 @@ model Item {
   title       String
   description String
   cost        Float
-  shipment    Shipment? @relation(fields: [shipmentId], references: [id])
+  shipment    Shipment? @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
   shipmentId  String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

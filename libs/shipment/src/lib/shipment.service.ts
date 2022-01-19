@@ -1,5 +1,5 @@
 import { PrismaService } from '@inventory/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShipmentInput } from './dto/create-shipment.input';
 import { UpdateShipmentInput } from './dto/update-shipment.input';
 
@@ -36,6 +36,32 @@ export class ShipmentService {
   async deleteShipment(id: string) {
     return this.prisma.shipment.delete({
       where: { id },
+    });
+  }
+
+  async addItem(itemId: string, shipmentId: string) {
+    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
+    if (!item) {
+      throw new NotFoundException('Item not found');
+    }
+    return this.prisma.shipment.update({
+      where: { id: shipmentId },
+      data: {
+        items: { connect: { id: itemId } },
+      },
+    });
+  }
+
+  async removeItem(itemId: string, shipmentId: string) {
+    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
+    if (!item) {
+      throw new NotFoundException('Item not found');
+    }
+    return this.prisma.shipment.update({
+      where: { id: shipmentId },
+      data: {
+        items: { disconnect: { id: itemId } },
+      },
     });
   }
 }

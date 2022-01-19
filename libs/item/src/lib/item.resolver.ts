@@ -30,4 +30,9 @@ export class ItemResolver {
   ) {
     return this.itemService.updateItem(id, data);
   }
+
+  @Mutation(() => Item)
+  async deleteItem(@Args('id') id: string) {
+    return this.itemService.deleteItem(id);
+  }
 }
