@@ -46,6 +46,7 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/inventory"
 
 3. Run API server `npm run start`
 4. Run React dev server `npm run start webapp`
+5. Run DB migrations using `npm run migrate:dev` and seed initial data into the database using `npm run seed:dev`
 
 ## Misc
 
